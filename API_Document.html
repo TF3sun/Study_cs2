@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up-Down Game API Documentation</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --sidebar-bg: #161b22;
+            --card-bg: #21262d;
+            --text-color: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-color: #58a6ff;
+            --border-color: #30363d;
+            --method-get: #2ea44f;
+            --method-post: #a371f7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            line-height: 1.6;
+        }
+
+        /* 사이드바 스타일 */
+        nav {
+            width: 260px;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        nav h1 {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin-bottom: 12px;
+        }
+
+        nav ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            transition: color 0.2s;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        nav .namespace {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* 메인 콘텐츠 영역 */
+        main {
+            margin-left: 260px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .header-section {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-section h2 {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin: 0 0 10px 0;
+        }
+
+        .badge {
+            background-color: rgba(88, 166, 255, 0.15);
+            color: var(--accent-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        .lifecycle-badge {
+            background-color: rgba(163, 113, 247, 0.15);
+            color: #a371f7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        /* 클래스/인터페이스 카드 */
+        .api-card {
+            background-color: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .api-card h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 메서드 스타일 명세 */
+        .method-block {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .method-header {
+            padding: 10px 16px;
+            background-color: rgba(48, 54, 61, 0.5);
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .method-signature {
+            font-family: monospace;
+            font-weight: bold;
+            margin-left: 10px;
+            color: #ff7b72;
+        }
+
+        .method-return {
+            color: #79c0ff;
+            font-family: monospace;
+            margin-right: 5px;
+        }
+
+        .method-body {
+            padding: 16px;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        table th, table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .desc-text {
+            color: var(--text-muted);
+            margin: 5px 0 15px 0;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>Study_cs2 API</h1>
+        <ul>
+            <li><a href="#overview">개요 (Overview)</a></li>
+        </ul>
+        
+        <div class="namespace">Study_cs2.Core</div>
+        <ul>
+            <li><a href="#game-manager">GameManager</a></li>
+            <li><a href="#iuser-controller">IUserController</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="overview" class="header-section">
+            <h2>Core API Reference</h2>
+            <p>비즈니스 도메인 로직과 입출력 컨트롤러 환경이 독립적으로 격리된 Up-Down 게임 핵심 아키텍처 명세서입니다.</p>
+            <p>본 아키텍처는 <code>Microsoft.Extensions.DependencyInjection</code> 아키텍처 체계 내에서 설계 규격을 가집니다.</p>
+        </section>
+
+        <section id="game-manager" class="api-card">
+            <h3>
+                <span class="badge">class</span>&nbsp;GameManager
+                <span class="lifecycle-badge">Transient 수명 주기</span>
+            </h3>
+            <p class="desc-text">Up-Down 게임의 핵심 비즈니스 로직, 난수 판정 제어, 승패 요건 및 전체적인 게임 루프 주기를 총괄하는 핵심 도메인 클래스입니다.</p>
+
+            <h4 style="color: #ffffff; margin-bottom: 8px;">생성자 (Constructor)</h4>
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-signature">public GameManager(IUserController userController)</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">의존성 주입(DI) 아키텍처 구조를 만족하기 위해 입출력을 추상화한 인터페이스를 주입받아 객체를 생성합니다.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">파라미터명</th>
+                                <th style="width: 25%;">타입</th>
+                                <th style="width: 50%;">설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>userController</code></td>
+                                <td><code>IUserController</code></td>
+                                <td>UI 하위 제어를 위해 결합도를 차단한 상위 추상화 컨트롤러 객체</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h4 style="color: #ffffff; margin-top: 25px; margin-bottom: 8px;">퍼블릭 메서드 (Public Methods)</h4>
+            
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-return">void</span>
+                    <span class="method-signature">Run()</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">전체 게임 시퀀스 실행 주기를 구동합니다. 게임 시작 메시지 활성화, 1~100 난수 세팅, 시도 횟수 한계값(7회) 카운팅 루프 및 종료 처리를 통합 관리합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="iuser-controller" class="api-card">
+            <h3>
+                <span class="badge">interface</span>&nbsp;IUserController
+                <span class="lifecycle-badge" style="background-color: rgba(46, 164, 79, 0.15); color: var(--method-get);">Singleton 수명 주기</span>
+            </h3>
+            <p class="desc-text">GameManager 내부 도메인 영역이 구체적인 물리 콘솔 장치나 UI 프레임워크에 종속되지 않도록 입출력 행위를 추상화 레이어로 격리하는 인터페이스입니다.</p>
+
+            <h4 style="color: #ffffff; margin-bottom: 8px;">추상 메서드 명세 (Abstract Methods)</h4>
+
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-return">bool</span>
+                    <span class="method-signature">ShowStartMessage()</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">게임 진입 초기 인트로 안내 문구를 출력하고 게임 진행 의사 여부를 검증합니다.</p>
+                    <p class="desc-text"><strong>Return:</strong> <code>true</code> 반환 시 게임 시퀀스 루프가 트리거되며, <code>false</code> 시 즉시 프로세스가 반환됩니다.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-return">int</span>
+                    <span class="method-signature">RequestNumberInput()</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">사용자에게 숫자를 입력하도록 요구하고 정수 형태 데이터로 안전하게 변환하여 수집합니다.</p>
+                    <p class="desc-text"><strong>Return:</strong> 사용자가 검증 필터를 통과하여 입력 완료한 1~100 사이의 유효 정수값.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-return">void</span>
+                    <span class="method-signature">DisplayResult(string message, int count)</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">매 판정 루프 처리 결과를 정돈된 형태로 포맷팅하여 화면에 정형 출력합니다. (정답 성공 판정, 7회 초과 패배 확정 포맷 등 일괄 대응)</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">인자명</th>
+                                <th style="width: 25%;">타입</th>
+                                <th style="width: 50%;">설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>message</code></td>
+                                <td><code>string</code></td>
+                                <td>"업", "다운", "정답입니다!" 혹은 지정 실패 규격 포맷 데이터 문자열</td>
+                            </tr>
+                            <tr>
+                                <td><code>count</code></td>
+                                <td><code>int</code></td>
+                                <td>현재까지 누적 산정된 유효 시도 횟수 변수</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-return">bool</span>
+                    <span class="method-signature">AskForRestart()</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">게임 결과 시퀀스가 최종 종결(성공 정답 처리 혹은 7회 실패 확정)된 시점에서 재시작 의사(y/n)를 분기 처리합니다.</p>
+                    <p class="desc-text"><strong>Return:</strong> <code>true</code> 반환 시 전체 자원이 재할당되어 새 게임이 셋업되며, <code>false</code> 시 종료 처리가 트리거됩니다.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-header">
+                    <span class="method-return">void</span>
+                    <span class="method-signature">ShowExitMessage()</span>
+                </div>
+                <div class="method-body">
+                    <p class="desc-text">재시작 거부 혹은 강제 중단에 의해 프로세스가 완전 종료되기 직전, 정상 시스템 종료 안내 문구를 스크린에 마킹합니다.</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>
